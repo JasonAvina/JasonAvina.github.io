@@ -1,29 +1,73 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Jason Avina</title>
+  <meta charset="UTF-8">
+  <title>Jason Avina – Portfolio</title>
   <style>
     body {
       font-family: sans-serif;
+      margin: 0;
+      padding: 0;
       background: #f4f4f4;
-      color: #222;
-      text-align: center;
-      padding-top: 10%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
     }
+
     h1 {
-      font-size: 3em;
+      margin: 2rem 0;
     }
-    p {
-      font-size: 1.2em;
-      color: #555;
+
+    .container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 2rem;
+      padding: 2rem;
+      width: 90%;
+      max-width: 1000px;
+    }
+
+    .card {
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      padding: 1.5rem;
+      text-align: center;
+      transition: transform 0.2s ease;
+      text-decoration: none;
+      color: black;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+    }
+
+    .card h2 {
+      margin-top: 0;
     }
   </style>
 </head>
 <body>
-  <h1>Jason Avina</h1>
-  <p>Welcome to my GitHub portfolio site.</p>
+  <h1>Jason Avina – Projects</h1>
+  <div class="container">
+    <a href="https://github.com/JasonAvina/linreg_methods" class="card">
+      <h2>Diabetes Regression Models</h2>
+      <p>Compare linear, regularized, and ensemble regressors on medical data.</p>
+    </a>
+    <a href="#" class="card">
+      <h2>Coming Soon</h2>
+      <p>Another project will be here shortly.</p>
+    </a>
+    <a href="#" class="card">
+      <h2>Coming Soon</h2>
+      <p>Another project will be here shortly.</p>
+    </a>
+    <a href="#" class="card">
+      <h2>Coming Soon</h2>
+      <p>Another project will be here shortly.</p>
+    </a>
+  </div>
 </body>
 </html>
+
 
