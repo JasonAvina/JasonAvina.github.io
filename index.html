@@ -15,7 +15,16 @@
     }
 
     h1 {
-      margin: 2rem 0;
+      margin-top: 2rem;
+      font-size: 2.5rem;
+    }
+
+    .tagline {
+      font-size: 1.1rem;
+      color: #333;
+      margin-bottom: 2rem;
+      text-align: center;
+      max-width: 700px;
     }
 
     .container {
@@ -30,7 +39,7 @@
     .card {
       background: white;
       border-radius: 12px;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
       padding: 1.5rem;
       text-align: center;
       transition: transform 0.2s ease;
@@ -39,31 +48,40 @@
     }
 
     .card:hover {
-      transform: translateY(-5px);
+      transform: scale(1.03);
     }
 
     .card h2 {
       margin-top: 0;
     }
+
+    .footer {
+      margin-top: 3rem;
+      margin-bottom: 2rem;
+      font-style: italic;
+      color: gray;
+      text-align: center;
+    }
   </style>
 </head>
 <body>
   <h1>Jason Avina – Projects</h1>
+  <p class="tagline">Applying data science, automation, and machine learning to real-world problems in healthcare, AI, and somethings just for fun.</p>
+
   <div class="container">
-    <a href="https://github.com/JasonAvina/linreg_methods" class="card">
+    <a href="https://github.com/JasonAvina/linreg_methods" class="card" target="_blank">
       <h2>Diabetes Regression Models</h2>
       <p>Compare linear, regularized, and ensemble regressors on medical data.</p>
     </a>
-    <a href="https://github.com/JasonAvina/checkout_bot" class="card">
+
+    <a href="https://github.com/JasonAvina/checkout_bot" class="card" target="_blank">
       <h2>Equipment Checkout Bot</h2>
       <p>Automated system for tracking overdue equipment checkouts with fuzzy date parsing and email notifications.</p>
     </a>
-    <a href="https://github.com/JasonAvina/celebfaces.git" class="card">
+
+    <a href="https://github.com/JasonAvina/celebfaces" class="card" target="_blank">
       <h2>Celebrity Face Classification</h2>
-      <p>This project uses an ANN, CNN, VGG16, and ResNet50 to classify celebrity faces </p>
-    </a>
-  </div>
-</body>
-</html>
+      <p>This project uses an ANN, CNN, VGG16, an
+
 
 
