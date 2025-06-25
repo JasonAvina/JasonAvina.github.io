@@ -19,6 +19,9 @@
     <div class="header">
       <h1>🏥 Diabetes Prediction Project</h1>
       <p class="subtitle">Using AI to Help Doctors Predict Patient Health Outcomes</p>
+      <div class="cta-buttons">
+        <a href="https://github.com/JasonAvina/linreg_methods" class="btn btn-primary" target="_blank">View Code on GitHub</a>
+      </div>
     </div>
 
     <!-- Main Content -->
@@ -48,56 +51,35 @@
             <h3>❌ The Problem</h3>
             <p>Doctors often have to make treatment decisions without knowing exactly how fast a patient's diabetes will progress. This can lead to:</p>
             <ul style="text-align: left; margin-top: 1rem;">
-              <li>• Late interventions</li>
-              <li>• Inefficient resource allocation</li>
-              <li>• Missed opportunities for prevention</li>
+              <li> Late interventions</li>
+              <li> Inefficient resource allocation</li>
+              <li> Missed opportunities for prevention</li>
             </ul>
           </div>
           <div class="solution">
             <h3>✅ My Solution</h3>
             <p>A predictive system that analyzes patient data and forecasts disease progression, enabling:</p>
             <ul style="text-align: left; margin-top: 1rem;">
-              <li>• Early intervention strategies</li>
-              <li>• Better resource planning</li>
-              <li>• Personalized treatment approaches</li>
+              <li> Early intervention strategies</li>
+              <li> Better resource planning</li>
+              <li> Personalized treatment approaches</li>
             </ul>
           </div>
         </div>
 
-        <!-- Skills section -->
-        <h2>🧠 Skills Demonstrated</h2>
-        <div class="skills-grid">
-          <div class="skill-card">
-            <div class="skill-icon">📊</div>
-            <h3>Data Analysis</h3>
-            <p>Processing medical data and finding meaningful patterns</p>
-          </div>
-          <div class="skill-card">
-            <div class="skill-icon">🤖</div>
-            <h3>Machine Learning</h3>
-            <p>Building and training AI models to make predictions</p>
-          </div>
-          <div class="skill-card">
-            <div class="skill-icon">🔬</div>
-            <h3>Scientific Method</h3>
-            <p>Testing hypotheses and comparing different approaches</p>
-          </div>
-          <div class="skill-card">
-            <div class="skill-icon">📈</div>
-            <h3>Performance Analysis</h3>
-            <p>Measuring accuracy and identifying the best solutions</p>
-          </div>
-          <div class="skill-card">
-            <div class="skill-icon">💡</div>
-            <h3>Problem Solving</h3>
-            <p>Breaking down complex healthcare challenges</p>
-          </div>
-          <div class="skill-card">
-            <div class="skill-icon">📋</div>
-            <h3>Documentation</h3>
-            <p>Clear reporting of methods and results</p>
-          </div>
-        </div>
+        <!-- Interactive Demo -->
+        <div class="interactive-demo">
+            <h2>🎯 See It In Action</h2>
+            <p>Click below to see how the prediction system works:</p>
+            <button class="demo-button" onclick="showDemo()">Run Prediction Demo</button>
+            <div class="demo-result" id="demoResult">
+                <h3>Example Prediction Result</h3>
+                <p><strong>Patient Profile:</strong> 65-year-old with BMI of 32, blood pressure 140/90</p>
+                <p><strong>AI Prediction:</strong> <span class="highlight">High likelihood of disease progression within 6 months</span></p>
+                <p><strong>Recommended Action:</strong> Schedule follow-up in 3 months instead of standard 6 months</p>
+                <p><strong>Confidence Level:</strong> 89% (based on similar patient patterns)</p>
+            </div>
+            </div>
 
       <!-- End of Main Content -->
       </div> 
@@ -118,16 +100,12 @@
             <span class="result-number">10</span>
             <div class="result-label">Health Factors Considered</div>
           </div>
-          <div class="result-item">
-            <span class="result-number">95%+</span>
-            <div class="result-label">Prediction Accuracy</div>
-          </div>
         </div>
         <p style="margin-top: 2rem; font-size: 1.1rem;">Successfully identified the most effective prediction methods and demonstrated measurable improvements in forecasting patient outcomes.</p>
       </div>
 
       <div class="section">
-        
+
         <!-- Business Value -->
         <div class="business-value">
           <h3>💼 Why This Matters to Your Organization</h3>
@@ -141,31 +119,53 @@
           </ul>
         </div>
 
-        <!-- Interactive Demo -->
-        <div class="interactive-demo">
-          <h2>🎯 See It In Action</h2>
-          <p>Click below to see how the prediction system works:</p>
-          <button class="demo-button" onclick="showDemo()">Run Prediction Demo</button>
-          <div class="demo-result" id="demoResult">
-            <h3>Example Prediction Result</h3>
-            <p><strong>Patient Profile:</strong> 65-year-old with BMI of 32, blood pressure 140/90</p>
-            <p><strong>AI Prediction:</strong> <span class="highlight">High likelihood of disease progression within 6 months</span></p>
-            <p><strong>Recommended Action:</strong> Schedule follow-up in 3 months instead of standard 6 months</p>
-            <p><strong>Confidence Level:</strong> 89% (based on similar patient patterns)</p>
-          </div>
+        <!-- Skills section -->
+        <h2>🧠 Skills Demonstrated</h2>
+        <div class="skills-grid">
+        <div class="skill-card">
+            <div class="skill-icon">📊</div>
+            <h3>Data Analysis</h3>
+            <p>Processing medical data and finding meaningful patterns</p>
         </div>
+        <div class="skill-card">
+            <div class="skill-icon">🤖</div>
+            <h3>Machine Learning</h3>
+            <p>Building and training AI models to make predictions</p>
+        </div>
+        <div class="skill-card">
+            <div class="skill-icon">🔬</div>
+            <h3>Scientific Method</h3>
+            <p>Testing hypotheses and comparing different approaches</p>
+        </div>
+        <div class="skill-card">
+            <div class="skill-icon">📈</div>
+            <h3>Performance Analysis</h3>
+            <p>Measuring accuracy and identifying the best solutions</p>
+        </div>
+        <div class="skill-card">
+            <div class="skill-icon">💡</div>
+            <h3>Problem Solving</h3>
+            <p>Breaking down complex healthcare challenges</p>
+        </div>
+        <div class="skill-card">
+            <div class="skill-icon">📋</div>
+            <h3>Documentation</h3>
+            <p>Clear reporting of methods and results</p>
+        </div>
+        </div>
+
+
 
       </div>
 
       <div class="cta-section">
         <h2>🚀 Want to See More?</h2>
         <p>Explore the technical implementation and detailed results</p>
-        
         <div class="cta-buttons">
           <a href="https://github.com/JasonAvina/linreg_methods" class="btn btn-primary" target="_blank">View Code on GitHub</a>
-          <a href="https://colab.research.google.com/github/JasonAvina/linreg_methods/blob/main/diabetes_final_code.ipynb" class="btn btn-secondary" target="_blank">Try Interactive Demo</a>
         </div>
       </div>
+
     </div>
   </div>
 
