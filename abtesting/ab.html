@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>A/B Testing with t-Tests | Jason Avina</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      line-height: 1.6;
+      color: #333;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+    }
+    
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+    
+    .header {
+      text-align: center;
+      color: white;
+      margin-bottom: 3rem;
+      padding: 2rem 0;
+    }
+    
+    .header h1 {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    }
+    
+    .header .subtitle {
+      font-size: 1.3rem;
+      opacity: 0.9;
+      font-weight: 300;
+    }
+    
+    .nav-back {
+      display: inline-block;
+      color: white;
+      text-decoration: none;
+      margin-bottom: 2rem;
+      padding: 0.5rem 1rem;
+      background: rgba(255,255,255,0.2);
+      border-radius: 25px;
+      transition: background 0.3s ease;
+    }
+    
+    .nav-back:hover {
+      background: rgba(255,255,255,0.3);
+    }
+    
+    .nav-back::before {
+      content: "← ";
+    }
+    
+    .main-content {
+      background: white;
+      border-radius: 20px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+      overflow: hidden;
+    }
+    
+    .hero-section {
+      background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+      color: white;
+      padding: 3rem;
+      text-align: center;
+    }
+    
+    .hero-section h2 {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+    }
+    
+    .hero-section p {
+      font-size: 1.2rem;
+      opacity: 0.9;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    
+    .section {
+      padding: 3rem;
+    }
+    
+    .section h2 {
+      color: #2c3e50;
+      font-size: 2rem;
+      margin-bottom: 2rem;
+      text-align: center;
+    }
+    
+    .simple-explanation {
+      background: #f8f9fa;
+      padding: 2rem;
+      border-radius: 15px;
+      margin: 2rem 0;
+      border-left: 5px solid #4CAF50;
+    }
+    
+    .simple-explanation h3 {
+      color: #2c3e50;
+      margin-bottom: 1rem;
+      font-size: 1.3rem;
+    }
+    
+    .simple-explanation p {
+      font-size: 1.1rem;
+      margin-bottom: 1rem;
+    }
+    
+    .interactive-demo {
+      background: #f8f9fa;
+      padding: 3rem;
+      text-align: center;
+    }
+    
+    .demo-controls {
+      display: flex;
+      gap: 2rem;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin: 2rem 0;
+    }
+    
+    .demo-button {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border: none;
+      padding: 1rem 2rem;
+      border-radius: 50px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin: 0.5rem;
+      min-width: 200px;
+    }
+    
+    .demo-button:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    }
+    
+    .demo-button:disabled {
+      background: #ccc;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+    
+    .results-display {
+      margin-top: 2rem;
+      display: none;
+    }
+    
+    .result-card {
+      background: white;
+      border-radius: 15px;
+      padding: 2rem;
+      margin: 1rem 0;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+      border-left: 5px solid #4CAF50;
+    }
+    
+    .result-card h3 {
+      color: #2c3e50;
+      margin-bottom: 1rem;
+      font-size: 1.4rem;
+    }
+    
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin: 1rem 0;
+    }
+    
+    .stat-item {
+      background: #f8f9fa;
+      padding: 1rem;
+      border-radius: 10px;
+      text-align: center;
+    }
+    
+    .stat-value {
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: #4CAF50;
+      display: block;
+    }
+    
+    .stat-label {
+      font-size: 0.9rem;
+      color: #666;
+      margin-top: 0.5rem;
+    }
+    
+    .test-results {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 2rem;
+      border-radius: 15px;
+      margin: 2rem 0;
+    }
+    
+    .test-results h3 {
+      margin-bottom: 1rem;
+    }
+    
+    .hypothesis-test {
+      background: rgba(255,255,255,0.1);
+      padding: 1.5rem;
+      border-radius: 10px;
+      margin: 1rem 0;
+    }
+    
+    .conclusion {
+      background: #d4edda;
+      border: 2px solid #28a745;
+      border-radius: 10px;
+      padding: 1.5rem;
+      margin: 2rem 0;
+      color: #155724;
+    }
+    
+    .conclusion.reject {
+      background: #f8d7da;
+      border-color: #dc3545;
+      color: #721c24;
+    }
+    
+    .highlight {
+      background: linear-gradient(135deg, #ffeaa7 0%, #fdcb6e 100%);
+      padding: 0.2rem 0.5rem;
+      border-radius: 5px;
+      font-weight: 600;
+      color: #333;
+    }
+    
+    .true-params {
+      background: #fff3cd;
+      border: 2px solid #ffc107;
+      border-radius: 15px;
+      padding: 2rem;
+      margin: 2rem 0;
+      display: none;
+    }
+    
+    .true-params h3 {
+      color: #856404;
+      margin-bottom: 1rem;
+    }
+    
+    .accuracy-check {
+      background: #e7f3ff;
+      border: 2px solid #007bff;
+      border-radius: 15px;
+      padding: 2rem;
+      margin: 2rem 0;
+      display: none;
+    }
+    
+    .skills-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 2rem;
+      margin: 2rem 0;
+    }
+    
+    .skill-card {
+      background: white;
+      padding: 2rem;
+      border-radius: 15px;
+      text-align: center;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+      border: 3px solid #e9ecef;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    
+    .skill-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+      border-color: #4CAF50;
+    }
+    
+    .skill-icon {
+      width: 60px;
+      height: 60px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border-radius: 50%;
+      margin: 0 auto 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      color: white;
+    }
+    
+    .cta-section {
+      background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+      color: white;
+      padding: 3rem;
+      text-align: center;
+    }
+    
+    .cta-buttons {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-top: 2rem;
+    }
+    
+    .btn {
+      display: inline-block;
+      padding: 1rem 2rem;
+      border-radius: 50px;
+      text-decoration: none;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      border: 2px solid transparent;
+    }
+    
+    .btn-primary {
+      background: #4CAF50;
+      color: white;
+    }
+    
+    .btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .fade-in {
+      animation: fadeIn 0.5s ease;
+    }
+    
+    @media (max-width: 768px) {
+      .demo-controls {
+        flex-direction: column;
+        align-items: center;
+      }
+      
+      .stats-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .header h1 {
+        font-size: 2rem;
+      }
+      
+      .section {
+        padding: 2rem;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    
+    <!-- Back Navigation Button -->
+    <a href="index.html" class="nav-back">Back to Portfolio</a>
+    
+    <!-- Project Title -->
+    <div class="header">
+      <h1>📊 A/B Testing with t-Tests</h1>
+      <p class="subtitle">Statistical Analysis for Blood Pressure Medication Effectiveness</p>
+      <div class="cta-buttons">
+        <a href="#" class="btn btn-primary" target="_blank">View Code on GitHub</a>
+        <a href="#" class="btn btn-primary" target="_blank">Download Dataset</a>
+      </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+
+      <!-- What This Project Does -->
+      <div class="hero-section">
+        <h2>What This Project Does</h2>
+        <p>This application simulates a clinical trial comparing ACE inhibitors vs Beta blockers for blood pressure reduction, then performs statistical hypothesis testing to determine if there's a significant difference between treatments.</p>
+      </div>
+
+      <div class="section">
+
+        <!-- Simple Explanation -->
+        <div class="simple-explanation">
+          <h3>🤔 In Simple Terms</h3>
+          <p><strong>Imagine you're a hospital data scientist</strong> tasked with analyzing the effectiveness of two blood pressure medications in clinical trials.</p>
+          <p><strong>The challenge:</strong> Given patient data from two treatment groups, can you determine if one medication is statistically significantly better than the other?</p>
+          <p><strong>This tool:</strong> Simulates realistic clinical trial data and performs Welch's two-sample t-test to make statistically sound conclusions.</p>
+        </div>
+
+        <!-- Interactive Demo -->
+        <div class="interactive-demo">
+          <h2>🎯 Statistical Hypothesis Testing Tool</h2>
+          <p>Click the buttons below to simulate a clinical trial and perform statistical analysis:</p>
+          
+          <div class="demo-controls">
+            <button class="demo-button" id="generateBtn" onclick="generateSamples()">Generate Random Samples</button>
+            <button class="demo-button" id="testBtn" onclick="performTTest()" disabled>Perform Welch's t-Test</button>
+            <button class="demo-button" id="revealBtn" onclick="revealTrueParams()" disabled>Reveal True Parameters</button>
+          </div>
+
+          <div class="results-display" id="resultsDisplay">
+            <!-- Sample Data Results -->
+            <div class="result-card" id="sampleResults">
+              <h3>📈 Sample Statistics</h3>
+              <div class="stats-grid" id="sampleStatsGrid">
+                <!-- Populated by JavaScript -->
+              </div>
+            </div>
+
+            <!-- Test Results -->
+            <div class="test-results" id="testResults" style="display: none;">
+              <h3>🔬 Welch's Two-Sample t-Test Results</h3>
+              <div class="hypothesis-test">
+                <p><strong>Null Hypothesis (H₀):</strong> μ₁ = μ₂ (No difference in mean BP reduction)</p>
+                <p><strong>Alternative Hypothesis (H₁):</strong> μ₁ ≠ μ₂ (Difference exists)</p>
+                <p><strong>Significance Level:</strong> α = 0.05</p>
+              </div>
+              <div id="testStatistics">
+                <!-- Populated by JavaScript -->
+              </div>
+            </div>
+
+            <!-- True Parameters Reveal -->
+            <div class="true-params" id="trueParams">
+              <h3>🎯 True Population Parameters</h3>
+              <div id="trueParamsContent">
+                <!-- Populated by JavaScript -->
+              </div>
+            </div>
+
+            <!-- Accuracy Check -->
+            <div class="accuracy-check" id="accuracyCheck">
+              <h3>✅ Test Accuracy Assessment</h3>
+              <div id="accuracyContent">
+                <!-- Populated by JavaScript -->
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Skills section -->
+      <div class="section">
+        <h2>🧠 Skills Demonstrated</h2>
+        <div class="skills-grid">
+          <div class="skill-card">
+            <div class="skill-icon">📊</div>
+            <h3>Statistical Testing</h3>
+            <p>Hypothesis testing, t-tests, p-values, confidence intervals</p>
+          </div>
+          <div class="skill-card">
+            <div class="skill-icon">🎲</div>
+            <h3>Simulation</h3>
+            <p>Monte Carlo methods, random sampling, distribution generation</p>
+          </div>
+          <div class="skill-card">
+            <div class="skill-icon">🏥</div>
+            <h3>Clinical Research</h3>
+            <p>A/B testing, clinical trial design, medical data analysis</p>
+          </div>
+          <div class="skill-card">
+            <div class="skill-icon">💻</div>
+            <h3>Programming</h3>
+            <p>JavaScript, HTML/CSS, interactive web applications</p>
+          </div>
+          <div class="skill-card">
+            <div class="skill-icon">📈</div>
+            <h3>Data Visualization</h3>
+            <p>Statistical summaries, results presentation, dashboard design</p>
+          </div>
+          <div class="skill-card">
+            <div class="skill-icon">🔬</div>
+            <h3>Scientific Method</h3>
+            <p>Experimental design, assumption validation, result interpretation</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="cta-section">
+        <h2>🚀 Next Steps: Advanced Features</h2>
+        <p>Future enhancements will include power analysis, effect size calculations, and Type I/II error visualization</p>
+        <div class="cta-buttons">
+          <a href="#" class="btn btn-primary" target="_blank">View Full Code</a>
+          <a href="#" class="btn btn-primary" target="_blank">Download Project</a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    // Global variables to store simulation data
+    let populationParams = null;
+    let sampleData = null;
+    let testResults = null;
+
+    // Box-Muller transform for generating normal random numbers
+    function generateNormal(mean, std) {
+      let u1 = Math.random();
+      let u2 = Math.random();
+      let z0 = Math.sqrt(-2 * Math.log(u1)) * Math.cos(2 * Math.PI * u2);
+      return z0 * std + mean;
+    }
+
+    // Generate random samples from two populations
+    function generateSamples() {
+      // True population parameters (inspired by Kaiser Permanente study)
+      populationParams = {
+        trueMean1: 8.2,  // ACE inhibitors mean BP reduction
+        trueMean2: 6.5,  // Beta blockers mean BP reduction  
+        trueStd1: 4.0,   // Standard deviation group 1
+        trueStd2: 4.24,  // Standard deviation group 2
+        n1: 50,          // Sample size group 1
+        n2: 48           // Sample size group 2
+      };
+
+      const { trueMean1, trueMean2, trueStd1, trueStd2, n1, n2 } = populationParams;
+
+      // Generate samples
+      const sample1 = Array.from({length: n1}, () => generateNormal(trueMean1, trueStd1));
+      const sample2 = Array.from({length: n2}, () => generateNormal(trueMean2, trueStd2));
+
+      // Calculate sample statistics
+      const mean1 = sample1.reduce((a, b) => a + b) / n1;
+      const mean2 = sample2.reduce((a, b) => a + b) / n2;
+      
+      const variance1 = sample1.reduce((sum, x) => sum + Math.pow(x - mean1, 2), 0) / (n1 - 1);
+      const variance2 = sample2.reduce((sum, x) => sum + Math.pow(x - mean2, 2), 0) / (n2 - 1);
+      
+      const std1 = Math.sqrt(variance1);
+      const std2 = Math.sqrt(variance2);
+
+      sampleData = {
+        n1, n2, mean1, mean2, std1, std2, variance1, variance2, sample1, sample2
+      };
+
+      // Display sample results
+      displaySampleResults();
+      
+      // Enable t-test button
+      document.getElementById('testBtn').disabled = false;
+      document.getElementById('resultsDisplay').style.display = 'block';
+      document.getElementById('resultsDisplay').classList.add('fade-in');
+    }
+
+    function displaySampleResults() {
+      const { n1, n2, mean1, mean2, std1, std2 } = sampleData;
+      
+      const statsGrid = document.getElementById('sampleStatsGrid');
+      statsGrid.innerHTML = `
+        <div class="stat-item">
+          <span class="stat-value">${n1}</span>
+          <div class="stat-label">ACE Inhibitors<br>Sample Size</div>
+        </div>
+        <div class="stat-item">
+          <span class="stat-value">${mean1.toFixed(2)}</span>
+          <div class="stat-label">ACE Mean BP<br>Reduction (mmHg)</div>
+        </div>
+        <div class="stat-item">
+          <span class="stat-value">${std1.toFixed(2)}</span>
+          <div class="stat-label">ACE Standard<br>Deviation</div>
+        </div>
+        <div class="stat-item">
+          <span class="stat-value">${n2}</span>
+          <div class="stat-label">Beta Blockers<br>Sample Size</div>
+        </div>
+        <div class="stat-item">
+          <span class="stat-value">${mean2.toFixed(2)}</span>
+          <div class="stat-label">Beta Mean BP<br>Reduction (mmHg)</div>
+        </div>
+        <div class="stat-item">
+          <span class="stat-value">${std2.toFixed(2)}</span>
+          <div class="stat-label">Beta Standard<br>Deviation</div>
+        </div>
+      `;
+    }
+
+    function performTTest() {
+      const { n1, n2, mean1, mean2, variance1, variance2 } = sampleData;
+
+      // Calculate Welch's t-statistic
+      const standardError = Math.sqrt(variance1/n1 + variance2/n2);
+      const tStatistic = (mean1 - mean2) / standardError;
+
+      // Calculate degrees of freedom using Welch-Satterthwaite equation
+      const df = Math.pow(variance1/n1 + variance2/n2, 2) / 
+                 (Math.pow(variance1/n1, 2)/(n1-1) + Math.pow(variance2/n2, 2)/(n2-1));
+
+      // Calculate approximate p-value
+      const absTStat = Math.abs(tStatistic);
+      let pValue;
+      
+      if (absTStat > 4) pValue = 0.0001;
+      else if (absTStat > 3) pValue = 0.002;
+      else if (absTStat > 2.5) pValue = 0.02;
+      else if (absTStat > 2) pValue = 0.05;
+      else if (absTStat > 1.96) pValue = 0.052;
+      else if (absTStat > 1.5) pValue = 0.15;
+      else pValue = 0.25;
+
+      const criticalValue = 1.985; // Approximate for large df
+      const reject = Math.abs(tStatistic) > criticalValue;
+
+      testResults = {
+        tStatistic, df, pValue, standardError, reject, criticalValue
+      };
+
+      displayTestResults();
+      
+      // Enable reveal button
+      document.getElementById('revealBtn').disabled = false;
+    }
+
+    function displayTestResults() {
+      const { tStatistic, df, pValue, standardError, reject, criticalValue } = testResults;
+      const { mean1, mean2 } = sampleData;
+      
+      const testStatsDiv = document.getElementById('testStatistics');
+      testStatsDiv.innerHTML = `
+        <div class="stats-grid">
+          <div class="stat-item">
+            <span class="stat-value">${tStatistic.toFixed(3)}</span>
+            <div class="stat-label">t-statistic</div>
+          </div>
+          <div class="stat-item">
+            <span class="stat-value">${df.toFixed(1)}</span>
+            <div class="stat-label">Degrees of Freedom</div>
+          </div>
+          <div class="stat-item">
+            <span class="stat-value">${pValue.toFixed(3)}</span>
+            <div class="stat-label">p-value</div>
+          </div>
+          <div class="stat-item">
+            <span class="stat-value">±${criticalValue}</span>
+            <div class="stat-label">Critical Value</div>
+          </div>
+        </div>
+        
+        <div class="conclusion ${reject ? 'reject' : ''}">
+          <h4>${reject ? '🚫 Reject H₀' : '✅ Fail to Reject H₀'}</h4>
+          <p><strong>Decision:</strong> ${reject ? 
+            `There IS a statistically significant difference between treatments (p = ${pValue.toFixed(3)} < 0.05)` :
+            `There is NO statistically significant difference between treatments (p = ${pValue.toFixed(3)} ≥ 0.05)`
+          }</p>
+          <p><strong>Effect Size:</strong> ACE inhibitors reduced BP by ${(mean1 - mean2).toFixed(2)} mmHg more than beta blockers on average.</p>
+        </div>
+      `;
+
+      document.getElementById('testResults').style.display = 'block';
+    }
+
+    function revealTrueParams() {
+      const { trueMean1, trueMean2, trueStd1, trueStd2 } = populationParams;
+      const { mean1, mean2 } = sampleData;
+      const { reject } = testResults;
+      
+      const trueParamsDiv = document.getElementById('trueParamsContent');
+      trueParamsDiv.innerHTML = `
+        <div class="stats-grid">
+          <div class="stat-item">
+            <span class="stat-value">${trueMean1}</span>
+            <div class="stat-label">True ACE Mean</div>
+          </div>
+          <div class="stat-item">
+            <span class="stat-value">${trueMean2}</span>
+            <div class="stat-label">True Beta Mean</div>
+          </div>
+          <div class="stat-item">
+            <span class="stat-value">${(trueMean1 - trueMean2).toFixed(1)}</span>
+            <div class="stat-label">True Difference</div>
+          </div>
+          <div class="stat-item">
+            <span class="stat-value">${(mean1 - mean2).toFixed(2)}</span>
+            <div class="stat-label">Sample Difference</div>
+          </div>
+        </div>
+      `;
+
+      // Assess test accuracy
+      const trueDifference = trueMean1 - trueMean2;
+      const correctDecision = (trueDifference !== 0 && reject) || (trueDifference === 0 && !reject);
+      
+      const accuracyDiv = document.getElementById('accuracyContent');
+      accuracyDiv.innerHTML = `
+        <p><strong>True Population Difference:</strong> ${trueDifference.toFixed(1)} mmHg</p>
+        <p><strong>Statistical Decision:</strong> ${reject ? 'Significant difference detected' : 'No significant difference detected'}</p>
+        <p><strong>Test Accuracy:</strong> <span class="highlight">${correctDecision ? 'CORRECT' : 'INCORRECT'}</span> - 
+        ${correctDecision ? 
+          'The statistical test correctly identified the true relationship!' : 
+          'The statistical test made an error (this happens due to random sampling)'
+        }</p>
+        <p><em>Note: With repeated sampling, the test would be correct about 95% of the time when α = 0.05</em></p>
+      `;
+
+      document.getElementById('trueParams').style.display = 'block';
+      document.getElementById('accuracyCheck').style.display = 'block';
+    }
+
+    // Add scroll animation for skill cards
+    document.addEventListener('DOMContentLoaded', function() {
+      const skillCards = document.querySelectorAll('.skill-card');
+      
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.style.opacity = '1';
+            entry.target.style.transform = 'translateY(0)';
+          }
+        });
+      });
+
+      skillCards.forEach((card) => {
+        card.style.opacity = '0';
+        card.style.transform = 'translateY(20px)';
+        card.style.transition = 'all 0.6s ease';
+        observer.observe(card);
+      });
+    });
+  </script>
+
+</body>
+</html>
