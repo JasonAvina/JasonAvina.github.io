@@ -1,4 +1,3 @@
-
 // Add smooth scroll behavior for better UX
 document.addEventListener('DOMContentLoaded', function() {
   // Add hover effects for project cards
@@ -13,3 +12,4 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   });
 });
+
