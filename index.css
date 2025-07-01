@@ -328,13 +328,5 @@ body {
   }
 }
 
-.contact-btn img.contact-icon {
-  width: 60%;
-  height: 60%;
-  max-width: 30px;
-  max-height: 30px;
-  object-fit: contain;
-  display: block;
-}
 
 
