@@ -327,3 +327,11 @@ body {
     transform: translateY(0);
   }
 }
+
+.contact-btn img.contact-icon {
+  width: 1.4rem;
+  height: 1.4rem;
+  object-fit: contain;
+  display: block;
+}
+
