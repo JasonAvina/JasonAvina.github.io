@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Social Media Sentiment Analysis | Jason Avina</title>
+  <link rel="stylesheet" href="sentiment.css">
+  <script src="sentiment.js"></script>
+</head>
+
+<body>
+  <div class="container">
+    
+    <!-- Back Navigation Button -->
+    <a href="../index.html" class="nav-back">Back to Portfolio</a>
+    
+    <!-- Project Title -->
+    <div class="header">
+      <h1>🔍 Social Media Sentiment Analysis</h1>
+      <p class="subtitle">LLM-Powered Pipeline for Real-Time Social Media Monitoring</p>
+      <div class="cta-buttons">
+        <a href="https://github.com/JasonAvina/JasonAvina.github.io/tree/main/sentiment" class="btn btn-primary" target="_blank">View Code on GitHub</a>
+        <a href="https://github.com/JasonAvina/JasonAvina.github.io/blob/main/sentiment/README.md" class="btn btn-primary" target="_blank">View Documentation</a>
+      </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+
+      <!-- What This Project Does -->
+      <div class="hero-section">
+        <h2>What This Project Does</h2>
+        <p>This application scrapes social media discussions about any topic, then uses AI to analyze sentiment trends and extract actionable insights that would normally require hours of manual research.</p>
+      </div>
+
+      <div class="section">
+
+        <!-- Simple Explanation -->
+        <div class="simple-explanation">
+          <h3>🤔 In Simple Terms</h3>
+          <p><strong>Imagine you're a company</strong> that needs to know what people are saying about your industry, competitors, or trending topics.</p>
+          <p><strong>The challenge:</strong> Manually reading through hundreds of social media posts and determining overall sentiment takes days of work.</p>
+          <p><strong>This tool:</strong> Automatically scrapes Reddit discussions and uses AI to analyze sentiment, categorize themes, and generate insights in minutes instead of hours.</p>
+        </div>
+
+        <!-- Interactive Demo -->
+        <div class="interactive-demo">
+          <h2>🎯 Social Media Sentiment Analyzer</h2>
+          <p>Choose a trending topic or enter your own phrase to analyze real-time social sentiment:</p>
+          
+          <!-- Example Topic Buttons -->
+          <div class="demo-controls">
+            <h4>Try These Popular Topics:</h4>
+            <div class="example-buttons">
+              <button class="demo-button" onclick="analyzeTopic('artificial intelligence')">Artificial Intelligence</button>
+              <button class="demo-button" onclick="analyzeTopic('remote work')">Remote Work</button>
+              <button class="demo-button" onclick="analyzeTopic('cryptocurrency')">Cryptocurrency</button>
+              <button class="demo-button" onclick="analyzeTopic('climate change')">Climate Change</button>
+            </div>
+          </div>
+
+          <!-- Custom Input -->
+          <div class="custom-input-section">
+            <h4>Or Analyze Your Own Topic:</h4>
+            <div class="input-group">
+              <input type="text" id="customTopic" class="topic-input" placeholder="Enter any topic or phrase (e.g., 'Tesla stock', 'job market', 'AI safety')" />
+              <button class="demo-button" id="analyzeBtn" onclick="analyzeCustomTopic()">Analyze Sentiment</button>
+            </div>
+          </div>
+
+          <div class="results-display" id="resultsDisplay">
+            <!-- Analysis Status -->
+            <div class="analysis-status" id="analysisStatus" style="display: none;">
+              <h3>🔄 Analyzing Social Media Data...</h3>
+              <p>Scraping recent posts from Reddit • Analyzing sentiment with AI • Extracting insights</p>
+              <div class="loading-bar">
+                <div class="loading-progress"></div>
+              </div>
+            </div>
+
+            <!-- Sample Data Results -->
+            <div class="result-card" id="sentimentResults" style="display: none;">
+              <h3>📊 Sentiment Analysis Results</h3>
+              <div class="analysis-summary" id="analysisSummary">
+                <!-- Populated by JavaScript -->
+              </div>
+              <div class="stats-grid" id="sentimentStatsGrid">
+                <!-- Populated by JavaScript -->
+              </div>
+            </div>
+
+            <!-- Sample Comments -->
+            <div class="result-card" id="sampleComments" style="display: none;">
+              <h3>💬 Sample Social Media Posts</h3>
+              <div id="commentsContainer">
+                <!-- Populated by JavaScript -->
+              </div>
+            </div>
+
+            <!-- Key Insights -->
+            <div class="insights-section" id="insightsResults" style="display: none;">
+              <h3>🧠 AI-Generated Insights</h3>
+              <div id="insightsContent">
+                <!-- Populated by JavaScript -->
+              </div>
+            </div>
+
+            <!-- Business Impact -->
+            <div class="business-impact" id="businessImpact" style="display: none;">
+              <h3>💼 Business Applications</h3>
+              <div id="businessContent">
+                <!-- Populated by JavaScript -->
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Skills section -->
+      <div class="section">
+        <h2>🧠 Skills Demonstrated</h2>
+        <div class="skills-grid">
+          <div class="skill-card">
+            <div class="skill-icon">🕷️</div>
+            <h3>Web Scraping</h3>
+            <p>Reddit API integration, data extraction, rate limiting, error handling</p>
+          </div>
+          <div class="skill-card">
+            <div class="skill-icon">🤖</div>
+            <h3>LLM Integration</h3>
+            <p>OpenAI API, prompt engineering, sentiment analysis, insight generation</p>
+          </div>
+          <div class="skill-card">
+            <div class="skill-icon">📱</div>
+            <h3>Social Media Analytics</h3>
+            <p>Platform APIs, data processing, trend analysis, social listening</p>
+          </div>
+          <div class="skill-card">
+            <div class="skill-icon">💻</div>
+            <h3>Data Pipeline</h3>
+            <p>Automated workflows, data cleaning, real-time processing, ETL processes</p>
+          </div>
+          <div class="skill-card">
+            <div class="skill-icon">📈</div>
+            <h3>Business Intelligence</h3>
+            <p>Actionable insights, trend identification, competitive analysis, reporting</p>
+          </div>
+          <div class="skill-card">
+            <div class="skill-icon">🔬</div>
+            <h3>Data Science</h3>
+            <p>Statistical analysis, pattern recognition, predictive insights, visualization</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="cta-section">
+        <h2>🚀 Ready to Monitor Your Brand's Online Presence?</h2>
+        <p>See how automated social media sentiment analysis can transform your market research and brand monitoring</p>
+        <div class="cta-buttons">
+          <a href="https://github.com/JasonAvina/JasonAvina.github.io/tree/main/sentiment" class="btn btn-primary" target="_blank">View Full Implementation</a>
+          <a href="https://github.com/JasonAvina/JasonAvina.github.io/blob/main/sentiment/README.md" class="btn btn-primary" target="_blank">Technical Documentation</a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</body>
+</html>
