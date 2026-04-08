@@ -1008,9 +1008,36 @@ async function runGemini() {
   document.getElementById('geminiResult').textContent = answer;
   }
 
-  function runPipeline() {
-    // TODO: wire to Flask backend at localhost:5000/pipeline
-    console.log('Pipeline fired');
+async function runPipeline() {
+  const apiKey = document.getElementById('apiKey').value.trim();
+  const question = document.getElementById('question').value.trim();
+  const supportFile = document.getElementById('supportFile').files[0];
+  const queryFile = document.getElementById('queryFile').files[0];
+
+  if (!apiKey) { alert('Please enter your Gemini API key'); return; }
+  if (!supportFile) { alert('Please upload a support video'); return; }
+  if (!queryFile) { alert('Please upload a query video'); return; }
+  if (!question) { alert('Please enter a question'); return; }
+
+  const formData = new FormData();
+  formData.append('apiKey', apiKey);
+  formData.append('question', question);
+  formData.append('supportVideo', supportFile);
+  formData.append('queryVideo', queryFile);
+
+  console.log('Sending to pipeline...');
+
+  const response = await fetch('http://localhost:5000/pipeline', {
+    method: 'POST',
+    body: formData
+  });
+
+  const data = await response.json();
+  console.log('Pipeline response:', data);
+
+  document.getElementById('pipelineEmpty').style.display = 'none';
+  document.getElementById('pipelineResult').style.display = 'block';
+  document.getElementById('pipelineResult').textContent = data.answer;
 }
 
 // ── DRAG AND DROP ──
