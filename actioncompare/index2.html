@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ActionCompare — Real-Time Video Comparison</title>
+
+<!-- Crawler / indexing prevention -->
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet, noimageindex">
+<meta name="googlebot" content="noindex, nofollow">
+<meta name="bingbot" content="noindex, nofollow">
+
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --bg: #ffffff;
+    --fg: #1a1a1f;
+    --accent: #2563eb;
+    --accent-hover: #1d4ed8;
+    --muted: #8a8a96;
+    --card-bg: #f5f5f3;
+    --border: #e2e1dc;
+  }
+
+  body {
+    font-family: 'DM Mono', monospace;
+    background: var(--bg);
+    color: var(--fg);
+    min-height: 100vh;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* Faint architectural grid */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(37, 99, 235, 0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(37, 99, 235, 0.03) 1px, transparent 1px),
+      linear-gradient(rgba(37, 99, 235, 0.015) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(37, 99, 235, 0.015) 1px, transparent 1px);
+    background-size:
+      100px 100px,
+      100px 100px,
+      20px 20px,
+      20px 20px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .page {
+    position: relative;
+    z-index: 1;
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 3rem 1.5rem 4rem;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 6rem;
+    animation: fadeDown 0.8s ease both;
+  }
+
+  .logo {
+    font-family: 'Instrument Serif', serif;
+    font-size: 1.25rem;
+    letter-spacing: -0.02em;
+    color: var(--fg);
+  }
+
+  .logo span {
+    color: var(--accent);
+  }
+
+  nav a {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--muted);
+    text-decoration: none;
+    transition: color 0.3s;
+  }
+  nav a:hover { color: var(--accent); }
+
+  .nav-links {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+  }
+
+  .nav-cta {
+    background: var(--accent);
+    color: #ffffff !important;
+    padding: 0.5rem 1rem;
+    font-size: 0.65rem !important;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    text-decoration: none;
+    transition: all 0.3s;
+  }
+  .nav-cta:hover {
+    background: var(--accent-hover);
+    color: #ffffff !important;
+  }
+
+  .hero {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 2.5rem;
+    animation: fadeUp 1s ease 0.2s both;
+  }
+
+  .tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--accent);
+    width: fit-content;
+  }
+
+  .tag::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    background: var(--accent);
+    border-radius: 50%;
+    animation: pulse 2s ease-in-out infinite;
+  }
+
+  h1 {
+    font-family: 'Instrument Serif', serif;
+    font-weight: 400;
+    font-size: clamp(2.8rem, 7vw, 4.2rem);
+    line-height: 1.08;
+    letter-spacing: -0.03em;
+    color: var(--fg);
+  }
+
+  h1 em {
+    font-style: italic;
+    color: var(--accent);
+  }
+
+  .subtitle {
+    font-size: 0.85rem;
+    line-height: 1.7;
+    color: var(--muted);
+    max-width: 480px;
+  }
+
+  .visual {
+    display: flex;
+    gap: 2px;
+    height: 48px;
+    margin: 0.5rem 0;
+    width: fit-content;
+  }
+
+  .bar {
+    width: 3px;
+    background: var(--accent);
+    opacity: 0.2;
+    border-radius: 1px;
+    animation: barGrow 1.5s ease-in-out infinite alternate;
+  }
+
+  .bar:nth-child(odd) { opacity: 0.5; }
+  .bar:nth-child(3n) { animation-delay: 0.3s; }
+  .bar:nth-child(5n) { animation-delay: 0.6s; }
+  .bar:nth-child(7n) { animation-delay: 0.15s; }
+
+  .cta-group {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-top: 1rem;
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.8rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    text-decoration: none;
+    padding: 1.1rem 2.4rem;
+    border: none;
+    cursor: pointer;
+    transition: all 0.35s cubic-bezier(0.25, 0, 0, 1);
+    width: fit-content;
+  }
+
+  .btn-primary {
+    background: var(--accent);
+    color: #ffffff;
+  }
+
+  .btn-primary:hover {
+    background: var(--accent-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 32px rgba(37, 99, 235, 0.18);
+  }
+
+  .btn-primary .arrow {
+    transition: transform 0.35s;
+  }
+  .btn-primary:hover .arrow {
+    transform: translateX(4px);
+  }
+
+  .info {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: var(--border);
+    margin-top: 4rem;
+    animation: fadeUp 1s ease 0.5s both;
+  }
+
+  .info-card {
+    background: var(--card-bg);
+    padding: 1.5rem;
+  }
+
+  .info-card .num {
+    font-family: 'Instrument Serif', serif;
+    font-size: 1.6rem;
+    color: var(--accent);
+    margin-bottom: 0.4rem;
+  }
+
+  .info-card p {
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--muted);
+    line-height: 1.5;
+  }
+
+  footer {
+    margin-top: 5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.65rem;
+    color: var(--muted);
+    letter-spacing: 0.05em;
+    animation: fadeUp 1s ease 0.7s both;
+  }
+
+  footer a {
+    color: var(--muted);
+    text-decoration: none;
+    transition: color 0.3s;
+  }
+  footer a:hover { color: var(--accent); }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes fadeDown {
+    from { opacity: 0; transform: translateY(-12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+  }
+
+  @keyframes barGrow {
+    from { transform: scaleY(0.4); }
+    to { transform: scaleY(1); }
+  }
+
+  @media (max-width: 560px) {
+    .page { padding: 2rem 1.25rem 3rem; }
+    nav { margin-bottom: 4rem; }
+    .info { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <nav>
+    <div class="logo">action<span>compare</span></div>
+    <div class="nav-links">
+      <a href="mailto:you@example.com">Contact</a>
+      <a class="nav-cta" href="mailto:you@example.com?subject=Demo%20Request%20%E2%80%94%20ActionCompare">Book a Demo</a>
+    </div>
+  </nav>
+
+  <main class="hero">
+    <div class="tag">Now accepting demo requests</div>
+
+    <h1>Real-time video<br>comparison,<br><em>illuminated.</em></h1>
+
+    <div class="visual">
+      <div class="bar"></div><div class="bar"></div><div class="bar"></div>
+      <div class="bar"></div><div class="bar"></div><div class="bar"></div>
+      <div class="bar"></div><div class="bar"></div><div class="bar"></div>
+      <div class="bar"></div><div class="bar"></div><div class="bar"></div>
+      <div class="bar"></div><div class="bar"></div><div class="bar"></div>
+      <div class="bar"></div><div class="bar"></div><div class="bar"></div>
+    </div>
+
+    <p class="subtitle">
+      Compare reference footage against live streams in real time.
+      Prototype-calculated analysis that catches what the human eye misses.
+    </p>
+
+    <div class="cta-group">
+      <!-- Replace 'mailto:' with your preferred booking method — Calendly link, Google Form, etc. -->
+      <a class="btn btn-primary" href="/cdn-cgi/l/email-protection#6910061c290c11080419050c470a0604561a1c0b030c0a1d542d0c04064c5b593b0c181c0c1a1d4c5b594c2c5b4c51594c505d4c5b59280a1d0006072a060419081b0c">
+        Book a Demo <span class="arrow">&rarr;</span>
+      </a>
+    </div>
+  </main>
+
+  <div class="info">
+    <div class="info-card">
+      <div class="num">&lt;50ms</div>
+      <p>Comparison latency</p>
+    </div>
+    <div class="info-card">
+      <div class="num">Live</div>
+      <p>Stream analysis</p>
+    </div>
+    <div class="info-card">
+      <div class="num">1:N</div>
+      <p>Reference to stream</p>
+    </div>
+  </div>
+
+  <footer>
+    <span>&copy; 2026</sp
