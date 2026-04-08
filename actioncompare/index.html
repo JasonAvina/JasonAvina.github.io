@@ -957,8 +957,17 @@ function setQuestion(q) {
 
 // ── BUTTON HANDLERS (wired up later to backend) ──
 function runGemini() {
-  // TODO: wire to backend or direct Gemini API call
-  console.log('Ask Gemini fired');
+  const apiKey = document.getElementById('apiKey').value.trim();
+  const question = document.getElementById('question').value.trim();
+  const supportFile = document.getElementById('supportFile').files[0];
+  const queryFile = document.getElementById('queryFile').files[0];
+
+  if (!apiKey) { alert('Please enter your Gemini API key'); return; }
+  if (!supportFile) { alert('Please upload a support video'); return; }
+  if (!queryFile) { alert('Please upload a query video'); return; }
+  if (!question) { alert('Please enter a question'); return; }
+
+  console.log('All inputs valid — ready to call Gemini');
 }
 
 function runPipeline() {
