@@ -991,7 +991,9 @@ async function runGemini() {
       body: JSON.stringify({
         contents: [{
           parts: [
+            { text: "This is the SUPPORT (reference) video:" },
             { inline_data: { mime_type: 'video/quicktime', data: supportB64 }},
+            { text: "This is the QUERY video:" },
             { inline_data: { mime_type: 'video/quicktime', data: queryB64 }},
             { text: question }
           ]
